@@ -1,0 +1,2287 @@
+/* ==========================================================================
+   Scoped CSS — 
+   Contains only the rules needed for the File Manager markup supplied
+   (classes: fm-fmg-*, fm-files-*, fm-file-*, fm-block-*, dropdown/lifm-list,
+   buttons, search, tabs, custom-control/checkbox, user-avatar, utilities).
+   Extracted & trimmed from the full DashLite stylesheet.
+   ========================================================================== */
+
+/* ---- Root variables / base reset (needed by almost everything below) --- */
+.fm-app,
+.fm-app[data-bs-theme=light] {
+    --bs-primary: #6576ff;
+    --bs-secondary: #364a63;
+    --bs-success: #1ee0ac;
+    --bs-info: #09c2de;
+    --bs-warning: #f4bd0e;
+    --bs-danger: #e85347;
+    --bs-light: #e5e9f2;
+    --bs-dark: #1f2b3a;
+    --bs-gray: #8091a7;
+    --bs-lighter: #f5f6fa;
+    --bs-body-font-family: Roboto, sans-serif;
+    --bs-body-font-size: 0.875rem;
+    --bs-body-font-weight: 400;
+    --bs-body-line-height: 1.65;
+    --bs-body-color: #526484;
+    --bs-body-bg: #f5f6fa;
+    --bs-border-width: 1px;
+    --bs-border-color: #dbdfea;
+    --bs-border-radius: 4px;
+    --bs-border-radius-sm: 3px;
+    --bs-box-shadow: 0 3px 12px 1px rgba(43, 55, 72, 0.15);
+}
+
+.fm-app *,
+.fm-app ::after,
+.fm-app ::before {
+    box-sizing: border-box;
+}
+
+.fm-app {
+    margin: 0;
+    font-family: var(--bs-body-font-family);
+    font-size: var(--bs-body-font-size);
+    font-weight: var(--bs-body-font-weight);
+    line-height: var(--bs-body-line-height);
+    color: var(--bs-body-color);
+    background-color: var(--bs-body-bg);
+    height: 100%;
+}
+
+.fm-app ol,
+.fm-app ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.fm-app a {
+    color: #798bff;
+    text-decoration: none;
+    transition: color .4s, background-color .4s, border .4s, box-shadow .4s;
+}
+
+.fm-app a:hover {
+    text-decoration: none;
+}
+
+.fm-app img,
+.fm-app svg {
+    vertical-align: middle;
+    max-width: 100%;
+}
+
+.fm-app svg {
+    height: 100%;
+}
+
+.fm-app button {
+    border-radius: 0;
+}
+
+.fm-app h3,
+.fm-app .h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 .5rem;
+    letter-spacing: -.03em;
+    color: #364a63;
+}
+
+.fm-app h6,
+.fm-app .h6 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0 0 .5rem;
+    letter-spacing: -.01em;
+    color: #364a63;
+}
+
+@media (min-width: 992px) {
+
+    .fm-app h3,
+    .fm-app .h3 {
+        font-size: 2rem;
+        letter-spacing: -.03em;
+    }
+}
+
+/* ---- Icon font (Nioicon) -------------------------------------------- */
+@font-face {
+    font-family: Nioicon;
+    src: url(../fonts/Nioicon.ttf) format("truetype"),
+        url(../fonts/Nioicon.woff) format("woff"),
+        url(../fonts/Nioicon.svg#Nioicon) format("svg");
+    font-weight: 400;
+    font-style: normal;
+    font-display: block;
+}
+
+.fm-app .ni {
+    font-family: Nioicon !important;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.fm-app .ni-search:before {
+    content: "\eb6c";
+}
+
+.fm-app .ni-plus:before {
+    content: "\eb44";
+}
+
+.fm-app .ni-upload-cloud:before {
+    content: "\ec1c";
+}
+
+.fm-app .ni-file-plus:before {
+    content: "\ea4c";
+}
+
+.fm-app .ni-folder-plus:before {
+    content: "\ea63";
+}
+
+.fm-app .ni-menu-alt-r:before {
+    content: "\eae7";
+}
+
+.fm-app .ni-arrow-left:before {
+    content: "\e938";
+}
+
+.fm-app .ni-view-grid3-wd:before {
+    content: "\ecd1";
+}
+
+.fm-app .ni-view-group-wd:before {
+    content: "\ecd3";
+}
+
+.fm-app .ni-view-row-wd:before {
+    content: "\ecdd";
+}
+
+.fm-app .ni-more-h:before {
+    content: "\eb01";
+}
+
+.fm-app .ni-share:before {
+    content: "\eb78";
+}
+
+.fm-app .ni-copy:before {
+    content: "\e9fb";
+}
+
+.fm-app .ni-forward-arrow:before {
+    content: "\ea6b";
+}
+
+.fm-app .ni-download:before {
+    content: "\ea20";
+}
+
+.fm-app .ni-trash:before {
+    content: "\ec08";
+}
+
+.fm-app .ni-eye:before {
+    content: "\ea3c";
+}
+
+.fm-app .ni-pen:before {
+    content: "\eb2b";
+}
+
+.fm-app .ni-star:before {
+    content: "\ebd0";
+}
+
+.fm-app .ni-star-fill:before {
+    content: "\ebcc";
+}
+
+.fm-app .icon {
+    display: inline-flex;
+}
+
+/* ---- Utility classes actually used ----------------------------------- */
+.fm-app .d-none {
+    display: none !important;
+}
+
+.fm-app .position-relative {
+    position: relative !important;
+}
+
+.fm-app .w-100 {
+    width: 100% !important;
+}
+
+.fm-app .m-0 {
+    margin: 0 !important;
+}
+
+.fm-app .px-2 {
+    padding-right: .75rem !important;
+    padding-left: .75rem !important;
+}
+
+.fm-app .me-n1 {
+    margin-right: -.375rem !important;
+}
+
+.fm-app .flex-column {
+    flex-direction: column !important;
+}
+
+.fm-app .g-1:not(.row) {
+    margin: -.1875rem;
+}
+
+.fm-app .g-1:not(.row)>div,
+.fm-app .g-1:not(.row)>li {
+    padding: .1875rem;
+}
+
+.fm-app .g-3:not(.row) {
+    margin: -.5rem;
+}
+
+.fm-app .g-3:not(.row)>div,
+.fm-app .g-3:not(.row)>li {
+    padding: .5rem;
+}
+
+@media (max-width: 991.98px) {
+    .fm-app .d-lg-none {
+        display: block !important;
+    }
+
+    .fm-app li.d-lg-none {
+        display: inline-block !important;
+    }
+}
+
+@media (min-width: 992px) {
+    .fm-app .d-lg-none {
+        display: none !important;
+    }
+
+    .fm-app .d-lg-flex {
+        display: flex !important;
+    }
+
+    .fm-app .d-lg-block {
+        display: block !important;
+    }
+}
+
+/* ---- Buttons ----------------------------------------------------------- */
+.fm-app .btn,
+.fm-app .dual-listbox .dual-listbox__button {
+    --bs-btn-padding-x: 1.125rem;
+    --bs-btn-padding-y: .4375rem;
+    --bs-btn-font-size: .8125rem;
+    --bs-btn-font-weight: 700;
+    --bs-btn-line-height: 1.25rem;
+    --bs-btn-border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    letter-spacing: .02em;
+    padding: var(--bs-btn-padding-y) var(--bs-btn-padding-x);
+    font-family: Roboto, sans-serif;
+    font-size: var(--bs-btn-font-size);
+    font-weight: var(--bs-btn-font-weight);
+    line-height: var(--bs-btn-line-height);
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    border: 1px solid transparent;
+    border-radius: var(--bs-btn-border-radius);
+    background-color: transparent;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out,
+        border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.fm-app .btn .icon {
+    font-size: 1.4em;
+    line-height: inherit;
+}
+
+.fm-app .btn .icon+span,
+.fm-app .btn span+.icon {
+    padding-left: 8px;
+}
+
+.fm-app .btn-light {
+    color: #000;
+    background-color: #e5e9f2;
+    border-color: #e5e9f2;
+}
+
+.fm-app .btn-light:hover,
+.fm-app .btn-light:focus {
+    color: #101924;
+    background: #b7c2d0;
+}
+
+.fm-app .btn-primary {
+    color: #fff;
+    background-color: #6576ff;
+    border-color: #6576ff;
+}
+
+.fm-app .btn-primary:hover {
+    color: #fff;
+    background-color: #5664d9;
+    border-color: #515ecc;
+}
+
+.fm-app .btn-sm {
+    --bs-btn-padding-y: .25rem;
+    --bs-btn-padding-x: .75rem;
+    --bs-btn-font-size: .75rem;
+    --bs-btn-border-radius: 3px;
+}
+
+.fm-app .btn-icon:not([class*=btn-icon-break]) {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.fm-app .btn-icon .icon {
+    width: 2.125rem;
+}
+
+.fm-app .btn-trigger {
+    position: relative;
+    z-index: 1;
+    color: #526484;
+    background: transparent;
+    border-color: transparent;
+}
+
+.fm-app .btn-trigger:before {
+    position: absolute;
+    z-index: -1;
+    height: 20px;
+    width: 20px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    content: "";
+    background-color: #e5e9f2;
+    border-radius: 50%;
+    opacity: 0;
+    transition: all .3s;
+}
+
+.fm-app .btn-trigger:hover:before,
+.fm-app .btn-trigger:focus:before,
+.fm-app .show>.btn-trigger:before {
+    opacity: 1;
+    height: 120%;
+    width: 120%;
+}
+
+/* ---- Dropdowns ----------------------------------------------------------- */
+.fm-app .dropdown {
+    position: relative;
+    display: inline-flex;
+}
+
+.fm-app .dropdown-toggle {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    margin-bottom: 0;
+}
+
+.fm-app .dropdown-toggle:not([class*=indicator]):after {
+    display: none;
+}
+
+.fm-app .dropdown-menu {
+    --bs-dropdown-min-width: 180px;
+    --bs-dropdown-font-size: .8125rem;
+    --bs-dropdown-color: #526484;
+    --bs-dropdown-bg: #fff;
+    --bs-dropdown-border-color: #e5e9f2;
+    --bs-dropdown-border-radius: 4px;
+    --bs-dropdown-divider-bg: #e5e9f2;
+    --bs-dropdown-lifm-color: #364a63;
+    --bs-dropdown-lifm-hover-color: #6576ff;
+    --bs-dropdown-lifm-hover-bg: #ebeef2;
+    --bs-dropdown-lifm-active-color: #6576ff;
+    --bs-dropdown-lifm-active-bg: #dbdfea;
+    position: absolute;
+    z-index: 1000;
+    display: none;
+    min-width: var(--bs-dropdown-min-width);
+    padding: 0;
+    margin: 0;
+    font-size: var(--bs-dropdown-font-size);
+    color: var(--bs-dropdown-color);
+    text-align: left;
+    background-color: var(--bs-dropdown-bg);
+    border: 1px solid var(--bs-dropdown-border-color);
+    border-radius: var(--bs-dropdown-border-radius);
+    box-shadow: 0 3px 12px 1px rgba(44, 55, 130, .15);
+    overflow: hidden;
+}
+
+.fm-app .dropdown-menu.show {
+    display: block;
+}
+
+.fm-app .dropdown-menu-end {
+    right: 0;
+    left: auto;
+}
+
+.fm-app .dropdown-menu-xs {
+    min-width: 120px;
+    max-width: 120px;
+}
+
+.fm-app .dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 8px 14px;
+    clear: both;
+    font-weight: 400;
+    color: var(--bs-dropdown-lifm-color);
+    text-align: inherit;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
+}
+
+.fm-app .dropdown-item:hover,
+.fm-app .dropdown-item:focus {
+    color: var(--bs-dropdown-lifm-hover-color);
+    background-color: var(--bs-dropdown-lifm-hover-bg);
+}
+
+.fm-app [class*=dropdown-indicator]:after {
+    border: none !important;
+    font-family: Nioicon;
+    vertical-align: middle;
+    content: "\e9c5";
+    margin-left: .25rem;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    font-size: 14px;
+}
+
+.fm-app .dropdown-indicator-caret:after {
+    content: "\e998";
+}
+
+.fm-app .dropdown-indicator-down:after {
+    content: "\e939";
+}
+
+/* ---- Link lists (used inside dropdown menus) ---------------------------- */
+.fm-app .lifm-list-opt {
+    padding: .5rem 0;
+}
+
+.fm-app .lifm-list-opt.no-bdr {
+    padding: .5rem 0;
+}
+
+.fm-app .lifm-list-opt a {
+    display: flex;
+    align-items: center;
+    padding: .625rem 1.25rem;
+    font-size: 12px;
+    font-weight: 500;
+    color: #526484;
+    transition: all .4s;
+    line-height: 1.3rem;
+    position: relative;
+}
+
+.fm-app .lifm-list-opt a:hover {
+    color: #6576ff;
+    background: #f5f6fa;
+}
+
+.fm-app .lifm-list-opt a .icon {
+    font-size: 1.125rem;
+    width: 1.75rem;
+    opacity: .8;
+}
+
+.fm-app .lifm-list-opt a.active:after,
+.fm-app .lifm-list-opt li.active>a:after {
+    content: "\e9bd";
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 1rem;
+    font-family: Nioicon;
+}
+
+.fm-app .lifm-list-opt .opt-head {
+    padding: .25rem 1.25rem;
+    color: #8094ae;
+}
+
+.fm-app .lifm-list-opt li+li {
+    border-top: 1px solid #e5e9f2;
+}
+
+.fm-app .lifm-list-opt.no-bdr li:not(.divider) {
+    border-top-width: 0;
+}
+
+.fm-app .lifm-list-opt.ui-colored a.active,
+.fm-app .lifm-list-opt.ui-colored li.active>a {
+    color: #6576ff;
+}
+
+.fm-app .lifm-list-plain {
+    padding: .5rem 0;
+}
+
+.fm-app .lifm-list-plain a {
+    display: flex;
+    align-items: center;
+    padding: .5rem 1.25rem;
+    color: #526484;
+    transition: all .4s;
+    line-height: 1.4rem;
+    position: relative;
+}
+
+.fm-app .lifm-list-plain a:hover {
+    color: #6576ff;
+    background: #f5f6fa;
+}
+
+.fm-app .lifm-list-plain a .icon {
+    font-size: 1.125rem;
+    width: 1.75rem;
+    opacity: .8;
+    color: #6576ff;
+}
+
+.fm-app .lifm-list-plain li+li {
+    border-top: 1px solid #e5e9f2;
+}
+
+.fm-app .lifm-list-plain.no-bdr li {
+    border-top-width: 0;
+}
+
+.fm-app .no-bdr {
+    border: 0 !important;
+}
+
+.fm-app .divider {
+    border-top: 1px solid #e5e9f2 !important;
+    margin: 28px 0;
+    display: block;
+}
+
+.fm-app .lifm-list-opt .divider,
+.fm-app .lifm-list-plain .divider {
+    margin: .5rem 0;
+}
+
+/* ---- Forms / search ----------------------------------------------------- */
+.fm-app .form-control,
+.fm-app .search-wrap .form-control {
+    display: block;
+    width: 100%;
+    padding: .4375rem 1rem;
+    font-size: .8125rem;
+    font-weight: 400;
+    line-height: 1.25rem;
+    color: #3c4d62;
+    appearance: none;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #dbdfea;
+    border-radius: 4px;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.fm-app .form-control:focus {
+    color: #3c4d62;
+    background-color: #fff;
+    border-color: #6576ff;
+    outline: 0;
+    box-shadow: 0 0 0 3px rgba(101, 118, 255, .1);
+}
+
+.fm-app .form-control::placeholder {
+    color: #b6c6e3;
+    opacity: 1;
+}
+
+.fm-app .form-focus-none:focus {
+    border-color: transparent;
+    box-shadow: none;
+}
+
+.fm-app .border-transparent {
+    border-color: transparent;
+}
+
+.fm-app .search-wrap {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    opacity: 0;
+    background: #fff;
+    transition: opacity .4s;
+    border-radius: 6px;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+}
+
+.fm-app .search-wrap.active {
+    opacity: 1;
+    z-index: 9;
+    pointer-events: auto;
+}
+
+.fm-app .search-content {
+    position: relative;
+    width: 100%;
+}
+
+.fm-app .search-content .form-control {
+    padding-left: calc(2.125rem + 2px);
+    padding-right: calc(2.125rem + 2px);
+}
+
+.fm-app .search-back,
+.fm-app .search-submit {
+    position: absolute;
+    top: 50%;
+}
+
+.fm-app .search-back {
+    left: 0;
+    transform: translate(-.25rem, -50%);
+}
+
+.fm-app .search-submit {
+    right: 0;
+    transform: translate(.5rem, -50%);
+}
+
+.fm-app .search-submit:hover {
+    color: #6576ff;
+}
+
+.fm-app .search-toggle {
+    transition: all .4s;
+    opacity: 1;
+}
+
+.fm-app .search-toggle.active {
+    opacity: 0;
+}
+
+/* ---- Block head (page title / toolbar row) ------------------------------ */
+.fm-app .fm-block-head {
+    position: relative;
+    padding-bottom: 1.25rem;
+}
+
+.fm-app .fm-block-head:only-child {
+    padding-bottom: 0;
+}
+
+.fm-app .fm-block-head-sm {
+    padding-bottom: 1rem;
+}
+
+.fm-app .fm-block-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.fm-app .fm-block-head-content {}
+
+.fm-app .fm-block-title {}
+
+.fm-app .page-title {
+    font-family: Roboto, sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+@media (min-width: 992px) {
+    .fm-app .page-title {
+        font-size: 1.75rem;
+    }
+}
+
+.fm-app .fm-block-tools {
+    display: flex;
+    align-items: center;
+}
+
+.fm-app .fm-block-tools>* {
+    display: inline-flex;
+}
+
+.fm-app .fm-switch-icon {
+    color: #90a1b8;
+    height: 1.5rem;
+    width: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fm-app .fm-switch-icon .icon {
+    font-size: 1.5rem;
+}
+
+.fm-app .fm-switch-icon:hover {
+    color: #526484;
+}
+
+.fm-app .fm-switch-icon.active {
+    color: #6576ff;
+}
+
+/* ---- File manager shell -------------------------------------------------- */
+.fm-app .fm-fmg-body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.fm-app .fm-fmg-body-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: .75rem 1.25rem;
+    border-bottom: 1px solid #dbdfea;
+    background-color: #fff;
+    position: relative;
+    top: 0;
+    border-top-right-radius: 4px;
+}
+
+.fm-app .fm-fmg-body-content {
+    padding: 1.125rem 1.25rem;
+    height: 100%;
+    max-height: 100%;
+    overflow: auto;
+}
+
+.fm-app .fm-fmg-search {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.fm-app .fm-fmg-actions {}
+
+@media (min-width: 576px) {
+    .fm-app .fm-fmg-body-content {
+        padding-top: 1.25rem;
+        padding-bottom: 1.25rem;
+    }
+}
+
+@media (min-width: 992px) {
+    .fm-app .fm-fmg-body-head {
+        padding: .75rem 1.75rem;
+        z-index: 9;
+    }
+
+    .fm-app .fm-fmg-body-content {
+        padding: 1.75rem;
+    }
+}
+
+/* ---- Tabs (grid / group / list view switch) ------------------------------ */
+.fm-app .tab-content>.tab-pane {
+    display: none;
+}
+
+.fm-app .tab-content>.active {
+    display: block;
+}
+
+.fm-app .nav {
+    display: flex;
+    margin: -.5rem -1rem;
+}
+
+/* ---- File table shell (fm-files-*) ---------------------------------------- */
+.fm-app .fm-files-head {
+    display: table-header-group;
+}
+
+.fm-app .fm-files-head .fm-file-item>div {
+    font-weight: 500;
+    font-size: .8125rem;
+    padding: .25rem;
+}
+
+.fm-app .fm-files-head .fm-file-item>div:first-child {
+    padding-left: 0;
+}
+
+.fm-app .fm-files-head .fm-file-item>div:last-child {
+    padding-right: .5rem;
+}
+
+.fm-app .fm-files-list {
+    display: table-row-group;
+}
+
+.fm-app .fm-files-group>.title {
+    border-top: 1px solid #e5e9f2;
+    font-size: 12px;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    padding: 1rem 0;
+    margin: 0;
+}
+
+.fm-app .fm-files-group+.fm-files-group {
+    margin-top: 3rem;
+}
+
+/* -- File item base (used by all three view modes) -- */
+.fm-app .fm-file-item>div {
+    position: relative;
+    display: table-cell;
+    padding: .5rem;
+    vertical-align: middle;
+}
+
+.fm-app .fm-file-actions {
+    width: 60px;
+    text-align: center;
+}
+
+.fm-app .fm-file-info {}
+
+.fm-app .fm-file-title {
+    display: flex;
+    align-items: center;
+}
+
+.fm-app .fm-file-icon {
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+
+.fm-app .fm-file-icon-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.fm-app .fm-file-icon-type {
+    width: 32px;
+    display: inline-block;
+    text-decoration: none;
+    color: inherit;
+    margin: auto;
+}
+
+.fm-app .fm-file-name {
+    font-weight: 500;
+    color: #364a63;
+    position: relative;
+    line-height: 1.4;
+}
+
+.fm-app .fm-file-name-text {
+    padding-right: 1.5rem;
+    display: inline-block;
+}
+
+.fm-app .fm-file-name-text .title {
+    transition: color .3s;
+    display: inline-block;
+    text-decoration: none;
+    word-break: break-word;
+}
+
+.fm-app .fm-file-name-text a.title {
+    color: #364a63;
+}
+
+.fm-app .fm-file-name-text a.title:hover {
+    color: #6576ff;
+}
+
+.fm-app .fm-file-desc {
+    display: flex;
+    align-items: center;
+    margin: 0 -.375rem;
+}
+
+.fm-app .fm-file-desc li {
+    position: relative;
+    padding: 0 .375rem;
+    font-size: 12px;
+    color: #8094ae;
+}
+
+.fm-app .fm-file-desc li:not(:first-child):before {
+    content: "\eca1";
+    font-family: Nioicon;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    font-size: 11px;
+    line-height: 10px;
+    transform: translate(-50%, -50%);
+    opacity: .8;
+}
+
+.fm-app .fm-file-meta {}
+
+.fm-app .fm-file-members {}
+
+.fm-app .tb-head {
+    font-weight: 500;
+    font-size: 13px;
+    color: #8094ae;
+}
+
+.fm-app .tb-lead {}
+
+.fm-app .tb-sub {
+    font-size: 12px;
+    color: #8094ae;
+}
+
+/* .asterisk (star / favorite toggle) */
+.fm-app .asterisk a {
+    position: relative;
+    color: #8094ae;
+    display: inline-flex;
+}
+
+.fm-app .asterisk a.active,
+.fm-app .asterisk a:hover {
+    color: #ffa353;
+}
+
+.fm-app .asterisk a.active .asterisk-on,
+.fm-app .asterisk a:hover .asterisk-on {
+    opacity: 1;
+}
+
+.fm-app .asterisk-on {
+    opacity: 0;
+    position: absolute;
+    left: 0;
+    color: #ffa353;
+    z-index: 1;
+    transition: opacity .2s;
+}
+
+.fm-app .fm-file-name .asterisk {
+    position: absolute;
+    display: inline-flex;
+    margin-left: .5rem;
+    transition: .3s opacity;
+    margin-top: -1px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.fm-app .fm-file-name .asterisk a {
+    opacity: 0;
+}
+
+.fm-app .fm-file-name .asterisk .icon {
+    font-size: 1.125rem;
+    color: #6576ff;
+}
+
+.fm-app .fm-file-info:hover .fm-file-name .asterisk a {
+    opacity: 1;
+}
+
+.fm-app .fm-file-info .fm-file-name .asterisk a.active {
+    opacity: 1;
+}
+
+/* -- Grid view -- */
+.fm-app .fm-files-view-grid .fm-files-head,
+.fm-app .fm-files-view-group .fm-files-head {
+    margin-bottom: .25rem;
+    width: 100%;
+    display: flex;
+}
+
+.fm-app .fm-files-view-grid .fm-files-head .fm-file-item,
+.fm-app .fm-files-view-group .fm-files-head .fm-file-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0;
+}
+
+.fm-app .fm-files-view-grid .fm-files-head .fm-file-item>div:not(.fm-file-info):not(.fm-file-actions),
+.fm-app .fm-files-view-group .fm-files-head .fm-file-item>div:not(.fm-file-info):not(.fm-file-actions) {
+    display: none;
+}
+
+.fm-app .fm-files-view-grid .fm-files-head .fm-file-actions,
+.fm-app .fm-files-view-group .fm-files-head .fm-file-actions {
+    width: 30px;
+    padding: 0 !important;
+    margin-right: -4px;
+}
+
+.fm-app .fm-files-view-grid .fm-files-list,
+.fm-app .fm-files-view-group .fm-files-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 16px;
+    padding: 0;
+}
+
+.fm-app .fm-files-view-grid .fm-files-list .fm-file-actions,
+.fm-app .fm-files-view-group .fm-files-list .fm-file-actions {
+    position: absolute;
+    border: 0 none;
+    background: none;
+    width: 46px;
+    right: 4px;
+    top: 10px;
+}
+
+.fm-app .fm-files-view-grid .fm-files-list .custom-control,
+.fm-app .fm-files-view-group .fm-files-list .custom-control {
+    position: absolute;
+}
+
+.fm-app .fm-files-view-grid .fm-file,
+.fm-app .fm-files-view-group .fm-file {
+    display: flex;
+    position: relative;
+    margin: 0;
+    background: #fff;
+    border: 1px solid #dbdfea;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    transition: all 0.2s;
+    height: 100%;
+}
+
+.fm-app .fm-files-view-grid .fm-file:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-color: #c2c9d6;
+}
+
+.fm-app .fm-files-view-grid .fm-file .fm-file-members,
+.fm-app .fm-files-view-group .fm-file .fm-file-members {
+    display: none;
+}
+
+.fm-app .fm-files-view-grid .fm-file {
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+    padding: 1rem .5rem;
+}
+
+.fm-app .fm-files-view-grid .fm-file>div {
+    display: block;
+    padding: 0;
+}
+
+.fm-app .fm-files-view-grid .fm-file-title {
+    display: flex;
+    flex-direction: column;
+}
+
+.fm-app .fm-files-view-grid .fm-file-icon {
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fm-app .fm-files-view-grid .fm-file-icon img {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.fm-app .fm-files-view-grid .fm-file-icon-type {
+    width: 60px;
+    height: 60px;
+}
+
+.fm-app .fm-files-view-grid .fm-file-name .title {
+    display: block;
+    padding: .5rem .25rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #334155;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+.fm-app .fm-files-view-grid .fm-file-name-text {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    width: 100%;
+    overflow: hidden;
+}
+
+.fm-app .fm-files-view-grid .fm-file-name {
+    width: 100%;
+    overflow: hidden;
+}
+
+.fm-app .fm-files-view-grid .fm-file-desc {
+    padding: 0 .25rem .75rem;
+    margin-top: -.125rem;
+    justify-content: center;
+}
+
+.fm-app .fm-files-view-grid .fm-file-desc .members {
+    display: none;
+}
+
+.fm-app .fm-files-view-grid .fm-file-info>.fm-file-link {
+    padding: .5rem 0;
+}
+
+.fm-app .fm-files-view-grid .fm-file .fm-file-meta {
+    padding-bottom: .5rem;
+}
+
+.fm-app .fm-files-view-grid .fm-file .custom-control {
+    top: .75rem;
+    left: 1rem;
+}
+
+/* -- Group view -- */
+.fm-app .fm-files-view-group .fm-file {
+    position: relative;
+    padding: .5rem .5rem;
+    width: 100%;
+}
+
+.fm-app .fm-files-view-group .fm-file>div {
+    display: block;
+    width: 100%;
+    padding-right: 2.5rem;
+}
+
+.fm-app .fm-files-view-group .fm-file-desc {
+    padding: .25rem .125rem 0;
+}
+
+.fm-app .fm-files-view-group .fm-file-name-text a.title {
+    padding: .125rem 0;
+}
+
+.fm-app .fm-files-view-group .fm-file-icon+.fm-file-name a.title {
+    padding-left: 40px;
+    margin-left: -40px;
+}
+
+.fm-app .fm-files-view-group .fm-file .fm-file-actions {
+    right: 2px;
+    top: 4px;
+}
+
+.fm-app .fm-files-view-group .fm-file .custom-control {
+    right: .5rem;
+    bottom: .5rem;
+}
+
+.fm-app .fm-files-view-group .fm-file .fm-file-meta {
+    display: none;
+}
+
+@media (min-width: 576px) {
+    .fm-app .fm-files-view-group .fm-file {
+        width: calc(100% - 16px);
+    }
+}
+
+@media (min-width: 660px) {
+    .fm-app .fm-files-view-group .fm-file {
+        width: calc(50% - 16px);
+    }
+}
+
+@media (min-width: 1200px) {
+    .fm-app .fm-files-view-group .fm-file {
+        width: calc(50% - 16px);
+    }
+}
+
+@media (min-width: 1540px) {
+    .fm-app .fm-files-view-group .fm-file {
+        width: calc(33.33% - 16px);
+    }
+}
+
+@media (min-width: 1800px) {
+    .fm-app .fm-files-view-group .fm-file {
+        width: calc(25% - 16px);
+    }
+}
+
+/* -- List view -- */
+.fm-app .fm-files-view-list {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.fm-app .fm-files-view-list .fm-files-head .fm-file-item {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border-bottom: 2px solid #dbdfea;
+    font-weight: bold;
+    color: #8091a7;
+    background-color: #f5f6fa;
+}
+
+.fm-app .fm-files-view-list .fm-file {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #dbdfea;
+    background-color: #fff;
+    transition: background-color 0.2s ease;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+.fm-app .fm-files-view-list .fm-file:hover {
+    background-color: #f5f6fa;
+}
+
+.fm-app .fm-file:hover {
+    z-index: 10;
+    position: relative;
+}
+
+.fm-app .fm-file:focus-within,
+.fm-app .fm-file:has(.dropdown-menu.show) {
+    z-index: 50 !important;
+    position: relative;
+}
+
+.fm-app .fm-files-view-list .fm-file.selected {
+    background: #e3e7fe;
+    border-left: 3px solid #6576ff;
+    padding-left: calc(1rem - 3px);
+}
+
+.fm-app .fm-files-view-list .fm-file>div,
+.fm-app .fm-files-view-list .fm-files-head .fm-file-item>div {
+    display: flex;
+    align-items: center;
+}
+
+.fm-app .fm-files-view-list .fm-file .fm-file-info,
+.fm-app .fm-files-view-list .fm-files-head .fm-file-info {
+    flex: 2;
+    min-width: 200px;
+    display: flex;
+    align-items: center;
+}
+
+.fm-app .fm-files-view-list .fm-file .fm-file-meta,
+.fm-app .fm-files-view-list .fm-files-head .fm-file-meta {
+    flex: 1;
+    color: #8091a7;
+}
+
+.fm-app .fm-files-view-list .fm-file .fm-file-size,
+.fm-app .fm-files-view-list .fm-files-head .fm-file-size {
+    flex: 1;
+    color: #8091a7;
+}
+
+.fm-app .fm-files-view-list .fm-file .fm-file-actions,
+.fm-app .fm-files-view-list .fm-files-head .fm-file-actions {
+    min-width: 80px;
+    justify-content: flex-end;
+}
+
+.fm-app .fm-files-view-list .fm-file .custom-checkbox {
+    margin-right: 1rem;
+}
+
+.fm-app .fm-files-view-list .fm-file-members .tb-shared {
+    position: absolute;
+    left: -1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+}
+
+.fm-app .fm-files-view-list .fm-file-name-text a.title {
+    padding: 1rem 0 .875rem;
+}
+
+.fm-app .fm-files-view-list .fm-file-icon+.fm-file-name a.title {
+    padding-left: 40px;
+    margin-left: -40px;
+}
+
+@media (max-width: 1199px) and (min-width: 992px),
+(max-width: 767px) {
+
+    .fm-app .fm-files-view-list .fm-file-members,
+    .fm-app .fm-files-view-list .fm-file-size {
+        display: none !important;
+    }
+}
+
+@media (max-width: 599px) {
+    .fm-app .fm-files-view-list .fm-file-icon-type {
+        width: 24px;
+    }
+
+    .fm-app .fm-files-view-list .fm-file-date,
+    .fm-app .fm-files-view-list .fm-file-meta,
+    .fm-app .fm-files-view-list .fm-file-size {
+        display: none !important;
+    }
+
+    .fm-app .fm-files-view-list .fm-file .custom-checkbox {
+        margin-right: .75rem;
+    }
+}
+
+/* ---- Custom checkbox controls -------------------------------------------- */
+.fm-app .custom-control {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    min-height: 1.5rem;
+    padding-left: 2.25rem;
+}
+
+.fm-app .custom-control-input {
+    position: absolute;
+    left: 0;
+    z-index: -1;
+    width: 1.5rem;
+    height: 1.471875rem;
+    opacity: 0;
+}
+
+.fm-app .custom-control-label {
+    position: relative;
+    margin-bottom: 0;
+    vertical-align: top;
+    font-size: 14px;
+    line-height: 1.25rem;
+    padding-top: .125rem;
+}
+
+.fm-app .custom-control-label::before {
+    position: absolute;
+    top: -.028125rem;
+    left: -2.25rem;
+    display: block;
+    width: 1.5rem;
+    height: 1.5rem;
+    pointer-events: none;
+    content: "";
+    background-color: #fff;
+    border: #dbdfea solid 2px;
+    box-shadow: inset 0 1px 1px rgba(16, 25, 36, .075);
+    border-radius: 4px;
+}
+
+.fm-app .custom-control-label::after {
+    position: absolute;
+    top: -.028125rem;
+    left: -2.25rem;
+    display: block;
+    width: 1.5rem;
+    height: 1.5rem;
+    content: "";
+    background: no-repeat 50% / 50% 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Nioicon;
+    color: #fff;
+    opacity: 0;
+}
+
+.fm-app .custom-checkbox .custom-control-label:after {
+    content: "\e9bd";
+}
+
+.fm-app .custom-control-input:checked~.custom-control-label::before {
+    color: #fff;
+    border-color: #6576ff;
+    background-color: #6576ff;
+    box-shadow: none;
+}
+
+.fm-app .custom-control-input:checked~.custom-control-label::after {
+    opacity: 1;
+}
+
+.fm-app .custom-control-input:focus~.custom-control-label::before {
+    box-shadow: 0 0 0 3px rgba(101, 118, 255, .1);
+}
+
+.fm-app .custom-control-sm {
+    min-height: 1.125rem;
+    padding-left: 1.625rem;
+}
+
+.fm-app .custom-control-sm .custom-control-label {
+    font-size: 12px;
+    line-height: 1.125rem;
+    padding-top: 0;
+}
+
+.fm-app .custom-control-sm .custom-control-label::after,
+.fm-app .custom-control-sm .custom-control-label::before {
+    left: -1.625rem;
+    width: 1.125rem;
+    height: 1.125rem;
+}
+
+.fm-app .custom-control-sm .custom-control-label:after {
+    font-size: .9em;
+}
+
+.fm-app .custom-control.notext {
+    margin-left: -.75rem;
+}
+
+.fm-app .custom-control.notext .custom-control-label {
+    position: relative;
+    left: .75rem;
+}
+
+.fm-app .custom-control-sm.notext {
+    margin-left: -.5rem;
+}
+
+.fm-app .custom-control-sm.notext .custom-control-label {
+    left: .5rem;
+}
+
+/* ---- User avatar (list view member stack) --------------------------------- */
+.fm-app .user-avatar,
+.fm-app [class^=user-avatar]:not([class*=-group]) {
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    background: #798bff;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: .06em;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.fm-app .user-avatar img,
+.fm-app [class^=user-avatar]:not([class*=-group]) img {
+    border-radius: 50%;
+}
+
+.fm-app .user-avatar-xs,
+.fm-app .user-avatar.xs {
+    height: 26px;
+    width: 26px;
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.fm-app .user-avatar-group {
+    display: flex;
+}
+
+.fm-app .user-avatar-group .user-avatar {
+    border: 2px solid #fff;
+}
+
+.fm-app .user-avatar-group .user-avatar:not(:first-child) {
+    margin-left: -20%;
+}
+
+.fm-app .user-avatar-group .user-avatar.xs:not(:first-child) {
+    margin-left: -.5rem;
+}
+
+.fm-app .bg-light.user-avatar,
+.fm-app .user-avatar.bg-light {
+    color: #526484 !important;
+}
+
+.fm-app .bg-purple.user-avatar,
+.fm-app .user-avatar.bg-purple {
+    background-color: #816bff !important;
+}
+
+.fm-app .bg-pink.user-avatar,
+.fm-app .user-avatar.bg-pink {
+    background-color: #ff63a5 !important;
+}
+
+.fm-app .bg-light {
+    background-color: #e5e9f2 !important;
+}
+
+.fm-app .bg-purple {
+    background-color: #816bff !important;
+}
+
+.fm-app .bg-pink {
+    background-color: #ff63a5 !important;
+}
+
+/* FM SPECIFIC STYLES FOR UPLOAD / PROGRESS */
+.fm-app #fm-dropzone {
+    transition: all 0.2s ease-in-out;
+}
+
+.fm-app #fm-dropzone.dragover {
+    background-color: #e0f2fe !important;
+    border-color: #0d6efd !important;
+}
+
+.fm-app .fm-upload-progress-item {
+    background: #fff;
+    border: 1px solid #e5e9f2;
+    border-radius: 0.25rem;
+    padding: 10px 15px;
+}
+
+.fm-app .fm-upload-progress-bar {
+    height: 4px;
+    background: #0d6efd;
+    border-radius: 2px;
+    transition: width 0.2s;
+}
+
+/* Modals centered and padded */
+.fm-app .modal-dialog-centered {
+    display: flex;
+    align-items: center;
+    min-height: calc(100% - 1rem);
+}
+
+
+/* ==========================================================================
+   Bootstrap 4 UI MODERNIZATION
+   --------------------------------------------------------------------------
+   The file manager is used inside a Bootstrap 4 application. These rules
+   intentionally stay scoped to .fm-app so they do not alter the host app.
+   Focus:
+   - Modern dropdowns
+   - Modern Bootstrap-4-compatible modals
+   - Better buttons / inputs
+   - Better mobile spacing
+   - Upload dropzone
+   - Cleaner selection states
+   ========================================================================== */
+
+/* ---- Modern design tokens ---------------------------------------------- */
+.fm-app {
+    --fm-primary: #6576ff;
+    --fm-primary-dark: #4f5fe3;
+    --fm-text: #364a63;
+    --fm-muted: #8091a7;
+    --fm-border: #e4e8f0;
+    --fm-border-dark: #d7ddea;
+    --fm-surface: #ffffff;
+    --fm-surface-soft: #f8f9fc;
+    --fm-danger: #e85347;
+    --fm-shadow-sm: 0 4px 14px rgba(31, 43, 58, .08);
+    --fm-shadow-md: 0 14px 38px rgba(31, 43, 58, .16);
+    --fm-radius: 8px;
+    --fm-radius-sm: 6px;
+}
+
+/* ---- Dropdown ----------------------------------------------------------- */
+.fm-app .dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.fm-app .dropdown-toggle {
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.fm-app .dropdown-menu {
+    display: none;
+    position: absolute;
+    z-index: 1050;
+    min-width: 190px;
+    margin: .5rem 0 0;
+    padding: .4rem 0;
+    color: #526484;
+    text-align: left;
+    background: #fff;
+    background-clip: padding-box;
+    border: 1px solid var(--fm-border);
+    border-radius: 8px;
+    box-shadow: var(--fm-shadow-md);
+    overflow: hidden;
+}
+
+.fm-app .dropdown-menu.show {
+    display: block;
+}
+
+.fm-app .dropdown-menu.dropdown-menu-right,
+.fm-app .dropdown-menu.dropdown-menu-end {
+    right: 0;
+    left: auto;
+}
+
+.fm-app .dropdown-menu.dropdown-menu-left {
+    right: auto;
+    left: 0;
+}
+
+.fm-app .dropdown-menu-xs {
+    min-width: 150px;
+}
+
+.fm-app .dropdown-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 38px;
+    padding: .55rem .9rem;
+    clear: both;
+    color: #364a63;
+    font-size: .8125rem;
+    font-weight: 500;
+    line-height: 1.35;
+    text-align: inherit;
+    white-space: nowrap;
+    background: transparent;
+    border: 0;
+    transition: background-color .15s ease, color .15s ease;
+}
+
+.fm-app .dropdown-item:hover,
+.fm-app .dropdown-item:focus,
+.fm-app .dropdown-item:active {
+    color: var(--fm-primary);
+    text-decoration: none;
+    background: #f4f6ff;
+}
+
+.fm-app .dropdown-item.active,
+.fm-app .dropdown-item:active {
+    color: var(--fm-primary);
+    background: #eef0ff;
+}
+
+.fm-app .dropdown-item.text-danger:hover,
+.fm-app .dropdown-item.text-danger:focus {
+    color: var(--fm-danger) !important;
+    background: #fff2f1;
+}
+
+.fm-app .dropdown-divider {
+    margin: .4rem 0;
+    border-top: 1px solid var(--fm-border);
+}
+
+/* Existing custom link lists used by this file manager */
+.fm-app .lifm-list-opt,
+.fm-app .link-list-opt {
+    padding: .35rem 0;
+}
+
+.fm-app .lifm-list-opt li+li,
+.fm-app .link-list-opt li+li {
+    border-top: 0;
+}
+
+.fm-app .lifm-list-opt a,
+.fm-app .link-list-opt a {
+    display: flex;
+    align-items: center;
+    min-height: 38px;
+    padding: .55rem .9rem;
+    color: #526484;
+    font-size: .8125rem;
+    font-weight: 500;
+    line-height: 1.35;
+    border-radius: 0;
+    transition: background-color .15s ease, color .15s ease;
+}
+
+.fm-app .lifm-list-opt a:hover,
+.fm-app .lifm-list-opt a:focus,
+.fm-app .link-list-opt a:hover,
+.fm-app .link-list-opt a:focus {
+    color: var(--fm-primary);
+    background: #f4f6ff;
+}
+
+.fm-app .lifm-list-opt a .icon,
+.fm-app .link-list-opt a .icon {
+    width: 1.75rem;
+    margin-right: .1rem;
+    font-size: 1rem;
+    opacity: .85;
+}
+
+.fm-app .lifm-list-opt a.text-danger,
+.fm-app .link-list-opt a.text-danger {
+    color: var(--fm-danger) !important;
+}
+
+.fm-app .lifm-list-opt a.text-danger:hover,
+.fm-app .link-list-opt a.text-danger:hover {
+    color: #c93d33 !important;
+    background: #fff2f1;
+}
+
+.fm-app .lifm-list-opt .opt-head {
+    padding: .4rem .9rem .3rem;
+    color: #9aa8ba;
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.fm-app .lifm-list-opt .divider,
+.fm-app .link-list-opt .divider {
+    height: 1px;
+    margin: .35rem 0;
+    background: var(--fm-border);
+    border: 0 !important;
+}
+
+/* ---- Action buttons / icon buttons ------------------------------------- */
+.fm-app .btn {
+    min-height: 38px;
+    border-radius: 7px;
+    font-weight: 600;
+    letter-spacing: 0;
+    box-shadow: none;
+}
+
+.fm-app .btn-primary {
+    background-color: var(--fm-primary);
+    border-color: var(--fm-primary);
+}
+
+.fm-app .btn-primary:hover,
+.fm-app .btn-primary:focus,
+.fm-app .btn-primary:active {
+    background-color: var(--fm-primary-dark);
+    border-color: var(--fm-primary-dark);
+}
+
+.fm-app .btn-light {
+    color: #526484;
+    background: #f5f7fa;
+    border-color: #e2e6ed;
+}
+
+.fm-app .btn-light:hover,
+.fm-app .btn-light:focus {
+    color: #364a63;
+    background: #edf0f5;
+    border-color: #d9dee7;
+}
+
+.fm-app .btn-outline-secondary,
+.fm-app .btn-outline-primary,
+.fm-app .btn-danger,
+.fm-app .btn-info {
+    border-radius: 7px;
+}
+
+.fm-app .btn-icon {
+    width: 38px;
+    min-width: 38px;
+    height: 38px;
+    min-height: 38px;
+    padding: 0 !important;
+    justify-content: center;
+    align-items: center;
+}
+
+.fm-app .btn-sm.btn-icon {
+    width: 32px;
+    min-width: 32px;
+    height: 32px;
+    min-height: 32px;
+}
+
+.fm-app .btn-trigger {
+    color: #8091a7;
+    border: 1px solid transparent;
+    border-radius: 7px;
+}
+
+.fm-app .btn-trigger:hover,
+.fm-app .btn-trigger:focus,
+.fm-app .show>.btn-trigger {
+    color: #526484;
+    background: #f2f4f8;
+    border-color: #e3e7ee;
+}
+
+/* ---- File action menus -------------------------------------------------- */
+.fm-app .fm-file-actions .dropdown-menu {
+    margin-top: .35rem;
+}
+
+.fm-app .fm-file-actions .dropdown-menu a {
+    text-decoration: none;
+}
+
+.fm-app .fm-file-actions {
+    z-index: 20;
+}
+
+/* Prevent a file card from visually cutting off its menu */
+.fm-app .fm-file,
+.fm-app .fm-file-item {
+    overflow: visible;
+}
+
+.fm-app .fm-files-view-grid .fm-file-actions .dropdown-menu {
+    right: 0;
+    left: auto;
+}
+
+/* ---- Forms -------------------------------------------------------------- */
+.fm-app .form-control {
+    min-height: 40px;
+    padding: .55rem .85rem;
+    color: #364a63;
+    background-color: #fff;
+    border: 1px solid #dfe4ec;
+    border-radius: 7px;
+    box-shadow: none;
+}
+
+.fm-app .form-control:hover {
+    border-color: #cbd3df;
+}
+
+.fm-app .form-control:focus {
+    color: #364a63;
+    background-color: #fff;
+    border-color: var(--fm-primary);
+    box-shadow: 0 0 0 3px rgba(101, 118, 255, .12);
+}
+
+.fm-app .form-control::placeholder {
+    color: #a3afbf;
+}
+
+/* ---- Breadcrumb --------------------------------------------------------- */
+.fm-app .fm-breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: .25rem 0 0;
+    margin: 0;
+    background: transparent;
+    font-size: .78rem;
+}
+
+.fm-app .fm-breadcrumb .breadcrumb-item {
+    display: flex;
+    align-items: center;
+    color: #8a98aa;
+}
+
+.fm-app .fm-breadcrumb .breadcrumb-item+.breadcrumb-item::before {
+    padding: 0 .45rem;
+    color: #b4bdc9;
+    content: "/";
+}
+
+.fm-app .fm-breadcrumb a {
+    color: #718096;
+}
+
+.fm-app .fm-breadcrumb a:hover {
+    color: var(--fm-primary);
+}
+
+.fm-app .fm-breadcrumb .breadcrumb-item.active {
+    color: #526484;
+    font-weight: 600;
+}
+
+/* ---- Selection bar ------------------------------------------------------ */
+.fm-app #fm-selection-actions,
+.fm-app #fm-clipboard-bar {
+    min-height: 52px;
+    padding: .65rem .85rem !important;
+    background: #fff !important;
+    border: 1px solid var(--fm-border) !important;
+    border-radius: 8px !important;
+    box-shadow: var(--fm-shadow-sm);
+}
+
+.fm-app #fm-selection-actions .btn,
+.fm-app #fm-clipboard-bar .btn {
+    min-height: 32px;
+}
+
+.fm-app #fm-selection-actions .btn+.btn,
+.fm-app #fm-clipboard-bar .btn+.btn {
+    margin-left: .35rem;
+}
+
+/* ---- File cards --------------------------------------------------------- */
+.fm-app .fm-files-view-grid .fm-file {
+    border-color: var(--fm-border);
+    border-radius: 9px;
+    box-shadow: 0 1px 2px rgba(31, 43, 58, .02);
+    transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+}
+
+.fm-app .fm-files-view-grid .fm-file:hover {
+    border-color: #d5dbeb;
+    box-shadow: 0 7px 20px rgba(31, 43, 58, .08);
+    transform: translateY(-1px);
+}
+
+.fm-app .fm-files-view-grid .fm-file.selected {
+    border-color: var(--fm-primary);
+    background: #f7f8ff;
+    box-shadow: 0 0 0 2px rgba(101, 118, 255, .10);
+}
+
+.fm-app .fm-files-view-list .fm-file>div {
+    border-bottom-color: var(--fm-border);
+}
+
+.fm-app .fm-files-view-list .fm-file.selected>div {
+    background: #f7f8ff;
+}
+
+/* ---- Modern checkbox ---------------------------------------------------- */
+.fm-app .custom-control-label::before {
+    width: 18px;
+    height: 18px;
+    top: 1px;
+    border: 1.5px solid #cbd3df;
+    border-radius: 5px;
+    box-shadow: none;
+    transition: all .15s ease;
+}
+
+.fm-app .custom-control-label::after {
+    width: 18px;
+    height: 18px;
+    top: 1px;
+    font-size: 10px;
+    transition: opacity .15s ease;
+}
+
+.fm-app .custom-control-input:checked~.custom-control-label::before {
+    background-color: var(--fm-primary);
+    border-color: var(--fm-primary);
+}
+
+.fm-app .custom-control-input:focus~.custom-control-label::before {
+    box-shadow: 0 0 0 3px rgba(101, 118, 255, .12);
+}
+
+/* ---- Bootstrap 4 modal modernization ----------------------------------- */
+/*
+ * Bootstrap 4 uses .close instead of .btn-close.
+ * These styles also support the current markup's .btn-close so the modal
+ * remains visually correct during the Bootstrap 4 transition.
+ */
+.fm-app .modal {
+    z-index: 1060;
+}
+
+.fm-app .modal-backdrop {
+    z-index: 1050;
+    background-color: #172033;
+}
+
+.fm-app .modal-backdrop.show {
+    opacity: .48;
+}
+
+.fm-app .modal-dialog {
+    margin: 1.5rem auto;
+}
+
+.fm-app .modal-dialog.modal-sm {
+    max-width: 390px;
+}
+
+.fm-app .modal-content {
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+    border: 0;
+    border-radius: 12px;
+    box-shadow: 0 22px 60px rgba(20, 31, 50, .22);
+}
+
+.fm-app .modal-header {
+    display: flex;
+    align-items: center;
+    padding: 1.15rem 1.25rem;
+    border-bottom: 1px solid #eef1f5 !important;
+}
+
+.fm-app .modal-header.border-0 {
+    border-bottom: 0 !important;
+}
+
+.fm-app .modal-title {
+    margin: 0;
+    color: #26364d;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.fm-app .modal-body {
+    padding: 1.25rem;
+    color: #617086;
+}
+
+.fm-app .modal-body.py-0 {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.fm-app .modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 1rem 1.25rem 1.25rem;
+    border-top: 1px solid #eef1f5 !important;
+}
+
+.fm-app .modal-footer.border-0 {
+    border-top: 0 !important;
+}
+
+.fm-app .modal-footer .btn {
+    min-width: 82px;
+}
+
+.fm-app .modal-footer .btn+.btn {
+    margin-left: .5rem;
+}
+
+/* Bootstrap 4 close button */
+.fm-app .modal-header .close {
+    width: 34px;
+    height: 34px;
+    margin: -4px -4px -4px auto;
+    padding: 0;
+    color: #8091a7;
+    font-size: 1.45rem;
+    font-weight: 400;
+    line-height: 34px;
+    text-align: center;
+    border-radius: 50%;
+    opacity: 1;
+    text-shadow: none;
+    transition: background-color .15s ease, color .15s ease;
+}
+
+.fm-app .modal-header .close:hover,
+.fm-app .modal-header .close:focus {
+    color: #364a63;
+    background: #f1f3f7;
+    opacity: 1;
+}
+
+/* Current markup uses btn-close; keep it looking modern */
+.fm-app .modal-header .btn-close {
+    position: relative;
+    width: 34px;
+    height: 34px;
+    margin: -4px -4px -4px auto;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    opacity: 1;
+    cursor: pointer;
+}
+
+.fm-app .modal-header .btn-close::before,
+.fm-app .modal-header .btn-close::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 15px;
+    height: 1.5px;
+    content: "";
+    background: #8091a7;
+    border-radius: 2px;
+}
+
+.fm-app .modal-header .btn-close::before {
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.fm-app .modal-header .btn-close::after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.fm-app .modal-header .btn-close:hover {
+    background: #f1f3f7;
+}
+
+.fm-app .modal-header .btn-close:hover::before,
+.fm-app .modal-header .btn-close:hover::after {
+    background: #364a63;
+}
+
+/* Modal-specific visual treatment */
+.fm-app #fm-modal-delete .modal-title {
+    color: var(--fm-danger);
+}
+
+.fm-app #fm-modal-delete .modal-body strong {
+    color: #26364d !important;
+}
+
+.fm-app #fm-dropzone {
+    min-height: 190px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem !important;
+    color: #718096;
+    background: #f8f9fc !important;
+    border: 1.5px dashed #cbd3df !important;
+    border-radius: 10px !important;
+    transition: background-color .18s ease, border-color .18s ease, transform .18s ease;
+}
+
+.fm-app #fm-dropzone:hover,
+.fm-app #fm-dropzone.dragover {
+    background: #f3f5ff !important;
+    border-color: var(--fm-primary) !important;
+}
+
+.fm-app #fm-dropzone.dragover {
+    transform: scale(1.01);
+}
+
+.fm-app #fm-dropzone .text-primary {
+    color: var(--fm-primary) !important;
+}
+
+.fm-app #fm-upload-list-container {
+    margin-top: 1.25rem !important;
+}
+
+.fm-app .fm-upload-progress-item {
+    padding: .75rem .85rem;
+    background: #fff;
+    border: 1px solid var(--fm-border);
+    border-radius: 8px;
+    box-shadow: var(--fm-shadow-sm);
+}
+
+.fm-app .fm-upload-progress-bar {
+    height: 5px;
+    background: var(--fm-primary);
+    border-radius: 999px;
+}
+
+/* ---- Mobile modal / dropdown adjustments ------------------------------ */
+@media (max-width: 575.98px) {
+
+    .fm-app .modal-dialog,
+    .fm-app .modal-dialog.modal-sm {
+        max-width: none;
+        margin: .75rem;
+    }
+
+    .fm-app .modal-content {
+        border-radius: 10px;
+    }
+
+    .fm-app .modal-header,
+    .fm-app .modal-body,
+    .fm-app .modal-footer {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .fm-app .dropdown-menu {
+        min-width: 175px;
+    }
+
+    .fm-app .fm-fmg-body-content {
+        padding-left: .85rem;
+        padding-right: .85rem;
+    }
+}
+
+/* ---- Respect reduced motion -------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+
+    .fm-app *,
+    .fm-app *::before,
+    .fm-app *::after {
+        transition: none !important;
+        animation: none !important;
+    }
+}
