@@ -2,11 +2,11 @@
 
 namespace TeknikHub\FileManager\Tests\Feature;
 
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\UploadedFile;
-use TeknikHub\FileManager\Tests\TestCase;
-use TeknikHub\FileManager\Services\PathService;
 use Exception;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use TeknikHub\FileManager\Services\PathService;
+use TeknikHub\FileManager\Tests\TestCase;
 
 class FileManagerTest extends TestCase
 {
@@ -24,8 +24,8 @@ class FileManagerTest extends TestCase
         $response = $this->getJson(route('teknikhub.file-manager.browse', ['disk' => 'public', 'path' => '']));
 
         $response->assertStatus(200)
-                 ->assertJsonPath('result', 'success');
-                 
+            ->assertJsonPath('result', 'success');
+
         $data = $response->json('data');
         $this->assertCount(2, $data);
     }
@@ -35,11 +35,11 @@ class FileManagerTest extends TestCase
         $response = $this->postJson(route('teknikhub.file-manager.folder'), [
             'disk' => 'public',
             'path' => '',
-            'name' => 'new_folder'
+            'name' => 'new_folder',
         ]);
 
         $response->assertStatus(200)
-                 ->assertJsonPath('result', 'success');
+            ->assertJsonPath('result', 'success');
 
         Storage::disk('public')->assertExists('new_folder');
     }
@@ -49,7 +49,7 @@ class FileManagerTest extends TestCase
         $response = $this->postJson(route('teknikhub.file-manager.folder'), [
             'disk' => 'public',
             'path' => '',
-            'name' => '../../malicious'
+            'name' => '../../malicious',
         ]);
 
         // Validation should fail or it creates a sanitized folder named 'malicious' due to basename
@@ -61,11 +61,11 @@ class FileManagerTest extends TestCase
 
     public function test_path_service_prevents_traversal()
     {
-        $pathService = new PathService();
-        
+        $pathService = new PathService;
+
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Invalid path: directory traversal attempt.');
-        
+
         $pathService->sanitize('../../../etc/passwd', 'public');
     }
 
@@ -76,29 +76,46 @@ class FileManagerTest extends TestCase
         $response = $this->postJson(route('teknikhub.file-manager.upload'), [
             'disk' => 'public',
             'path' => '',
-            'file' => $file
+            'file' => $file,
         ]);
 
         $response->assertStatus(200)
-                 ->assertJsonPath('result', 'success');
+            ->assertJsonPath('result', 'success');
 
         Storage::disk('public')->assertExists('avatar.jpg');
+    }
+
+    public function test_can_upload_file_with_unicode_filename()
+    {
+        $file = UploadedFile::fake()->create('وُلد في .pdf', 100, 'application/pdf');
+
+        $response = $this->postJson(route('teknikhub.file-manager.upload'), [
+            'disk' => 'public',
+            'path' => '',
+            'file' => $file,
+        ]);
+
+        $response->assertStatus(200)
+            ->assertJsonPath('result', 'success')
+            ->assertJsonPath('data.name', 'وُلد_في_.pdf');
+
+        Storage::disk('public')->assertExists('وُلد_في_.pdf');
     }
 
     public function test_blocked_extensions_are_prevented()
     {
         config(['teknikhub-file-manager.upload.blocked_extensions' => ['php']]);
-        
+
         $file = UploadedFile::fake()->create('shell.php', 100);
 
         $response = $this->postJson(route('teknikhub.file-manager.upload'), [
             'disk' => 'public',
             'path' => '',
-            'file' => $file
+            'file' => $file,
         ]);
 
         $response->assertStatus(400)
-                 ->assertJsonPath('result', 'error');
+            ->assertJsonPath('result', 'error');
 
         Storage::disk('public')->assertMissing('shell.php');
     }

@@ -196,6 +196,16 @@
                 </div>
             </div>
 
+            <div id="fm-picker-footer" class="d-none justify-content-between align-items-center mt-3 p-2 border-top bg-white">
+                <div class="d-flex align-items-center gap-2 min-width-0">
+                    <span id="fm-picker-selected-icon" class="fm-picker-selected-icon text-primary"></span>
+                    <span id="fm-picker-selected-text" class="text-muted text-truncate">No item selected</span>
+                </div>
+                <button type="button" class="btn btn-primary fw-semibold px-4" id="fm-btn-picker-select" disabled>
+                    Select this item
+                </button>
+            </div>
+
 
             <!-- Upload Input -->
             <input type="file" id="fm-upload-input" class="d-none" multiple>

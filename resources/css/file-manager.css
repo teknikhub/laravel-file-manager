@@ -797,6 +797,58 @@
     overflow: auto;
 }
 
+.fm-app #fm-picker-footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    flex: 0 0 auto;
+    min-height: 52px;
+    margin-bottom: -1.125rem;
+}
+
+.fm-app.fm-picker-window {
+    min-height: 100vh;
+    height: 100vh;
+}
+
+.fm-app.fm-picker-window .fm-fmg-body {
+    min-height: 100vh;
+}
+
+.fm-app.fm-picker-window .fm-fmg-body-content {
+    padding-bottom: 0;
+}
+
+.fm-app.fm-picker-window #fm-picker-footer {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1050;
+    min-height: 58px;
+    margin: 0;
+    padding: .65rem 1rem;
+    background: #fff;
+    box-shadow: 0 -2px 8px rgba(31, 43, 58, .08);
+}
+
+.fm-app #fm-picker-footer .fm-picker-selected-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    flex: 0 0 28px;
+    overflow: hidden;
+    color: var(--fm-primary, #6576ff);
+}
+
+.fm-app #fm-picker-footer .fm-picker-selected-icon img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+}
+
 .fm-app .fm-fmg-search {
     display: flex;
     align-items: center;
@@ -810,6 +862,10 @@
         padding-top: 1.25rem;
         padding-bottom: 1.25rem;
     }
+
+    .fm-app #fm-picker-footer {
+        margin-bottom: -1.25rem;
+    }
 }
 
 @media (min-width: 992px) {
@@ -820,6 +876,10 @@
 
     .fm-app .fm-fmg-body-content {
         padding: 1.75rem;
+    }
+
+    .fm-app #fm-picker-footer {
+        margin-bottom: -1.75rem;
     }
 }
 
@@ -1594,7 +1654,7 @@
 .fm-app .fm-upload-progress-item {
     background: #fff;
     border: 1px solid #e5e9f2;
-    border-radius: 0.25rem;
+    border-radius: 0;
     padding: 10px 15px;
 }
 
@@ -1873,6 +1933,22 @@
     color: #526484;
     background: #f2f4f8;
     border-color: #e3e7ee;
+}
+
+.fm-app .fm-file-actions .btn-trigger {
+    border-radius: 0;
+}
+
+.fm-app .fm-file-actions .btn-trigger:before {
+    display: none;
+}
+
+.fm-app .fm-file-actions .btn-trigger:hover,
+.fm-app .fm-file-actions .btn-trigger:focus,
+.fm-app .fm-file-actions .show>.btn-trigger {
+    color: #8091a7;
+    background: transparent;
+    border-color: transparent;
 }
 
 /* ---- File action menus -------------------------------------------------- */
@@ -2235,7 +2311,7 @@
     padding: .75rem .85rem;
     background: #fff;
     border: 1px solid var(--fm-border);
-    border-radius: 8px;
+    border-radius: 0;
     box-shadow: var(--fm-shadow-sm);
 }
 

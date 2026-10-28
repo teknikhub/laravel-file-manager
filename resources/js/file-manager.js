@@ -2,12 +2,14 @@
     // Basic Configuration from window
     const config = window.TeknikHubFileManagerConfig || {};
     const baseUrl = config.baseUrl || '';
+    const pickerWindow = Boolean(window.opener);
     let currentDisk = config.disk || 'public';
     let currentPath = '';
     
     // State
     let items = [];
     let selectedPaths = [];
+    let multiSelectMode = false;
     let clipboard = { action: null, paths: [], sourcePath: '' };
     let currentView = 'grid'; // grid or list
     let currentPreviewItem = null;
@@ -41,8 +43,21 @@
         modalNewFolder: document.getElementById('fm-modal-new-folder'),
         modalRename: document.getElementById('fm-modal-rename'),
         modalPreview: document.getElementById('fm-modal-preview'),
-        modalDelete: document.getElementById('fm-modal-delete')
+        modalDelete: document.getElementById('fm-modal-delete'),
+        pickerFooter: document.getElementById('fm-picker-footer'),
+        pickerSelectedIcon: document.getElementById('fm-picker-selected-icon'),
+        pickerSelectedText: document.getElementById('fm-picker-selected-text'),
+        pickerSelectButton: document.getElementById('fm-btn-picker-select')
     };
+
+    if (pickerWindow) {
+        document.getElementById('teknikhub-file-manager-app')?.classList.add('fm-picker-window');
+    }
+
+    if (pickerWindow && el.pickerFooter) {
+        el.pickerFooter.classList.remove('d-none');
+        el.pickerFooter.classList.add('d-flex');
+    }
 
     const getCsrfToken = () => document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
@@ -63,6 +78,7 @@
                 }
                 items = json.data;
                 selectedPaths = [];
+                multiSelectMode = false;
                 window.TeknikHubFM.selectedPaths = [];
                 
                 updateBreadcrumb(search);
@@ -118,6 +134,7 @@
                 <div class="dropdown">
                     <a href="" class="dropdown-toggle btn btn-sm btn-icon btn-trigger" data-bs-toggle="dropdown"><em class="icon bi bi-three-dots"></em></a>
                     <div class="dropdown-menu dropdown-menu-end shadow border py-2 bg-white" style="background-color: #fff !important; min-width: 160px; z-index: 1055;">
+                        ${pickerWindow ? '' : `<a class="dropdown-item fm-item-action d-flex align-items-center mb-1" href="#" data-action="select" data-path="${item.path}"><em class="icon bi bi-check2-square me-2 text-primary"></em><span>Select</span></a>`}
                         ${item.previewable ? `<a class="dropdown-item fm-item-action d-flex align-items-center mb-1" href="#" data-action="preview" data-path="${item.path}"><em class="icon bi bi-eye me-2 text-primary"></em><span>Preview</span></a>` : ''}
                         <a class="dropdown-item fm-item-action d-flex align-items-center mb-1" href="#" data-action="copy" data-path="${item.path}"><em class="icon bi bi-copy me-2 text-secondary"></em><span>Copy</span></a>
                         <a class="dropdown-item fm-item-action d-flex align-items-center mb-1" href="#" data-action="cut" data-path="${item.path}"><em class="icon bi bi-box-arrow-right me-2 text-secondary"></em><span>Move</span></a>
@@ -193,8 +210,10 @@
                     if (e.target.closest('.dropdown, .fm-item-action, .custom-checkbox')) return;
                     e.preventDefault();
                     
-                    if (e.ctrlKey || e.metaKey) {
+                    if (!pickerWindow && (multiSelectMode || e.ctrlKey || e.metaKey)) {
                         toggleSelection(item.path, node);
+                    } else if (item.type === 'directory') {
+                        fetchItems(item.path);
                     } else {
                         clearSelection();
                         toggleSelection(item.path, node);
@@ -204,18 +223,11 @@
                 node.addEventListener('dblclick', (e) => {
                     if (e.target.closest('.dropdown, .fm-item-action, .custom-checkbox')) return;
                     e.preventDefault();
+                    if (multiSelectMode) return;
                     if (item.type === 'directory') {
                         fetchItems(item.path);
                     } else if (window.opener) {
-                        let fileUrl = item.url || (window.location.origin + '/storage/' + item.path);
-                        fileUrl = fileUrl.replace(window.location.origin, '');
-                        if (fileUrl.startsWith('/public/')) {
-                            fileUrl = fileUrl.substring(8); // remove '/public/'
-                        } else if (fileUrl.startsWith('/')) {
-                            fileUrl = fileUrl.substring(1); // remove leading slash to match 'images/...' format
-                        }
-                        const event = new CustomEvent('teknikhub-file-manager:file-selected', { detail: { url: fileUrl } });
-                        document.dispatchEvent(event);
+                        selectPickerItem(item);
                     } else if (item.previewable) {
                         previewFile(item);
                     } else {
@@ -253,15 +265,7 @@
                         } else if (action === 'preview') {
                             previewFile(item);
                         } else if (action === 'select') {
-                            let fileUrl = item.url || (window.location.origin + '/storage/' + path);
-                            fileUrl = fileUrl.replace(window.location.origin, '');
-                            if (fileUrl.startsWith('/public/')) {
-                                fileUrl = fileUrl.substring(8);
-                            } else if (fileUrl.startsWith('/')) {
-                                fileUrl = fileUrl.substring(1);
-                            }
-                            const event = new CustomEvent('teknikhub-file-manager:file-selected', { detail: { url: fileUrl } });
-                            document.dispatchEvent(event);
+                            multiSelectMode = true;
                         }
                     });
                 });
@@ -298,14 +302,52 @@
 
     const clearSelection = () => {
         selectedPaths = [];
+        multiSelectMode = false;
         window.TeknikHubFM.selectedPaths = [];
         document.querySelectorAll('.fm-item.selected').forEach(el => el.classList.remove('selected'));
         updateSelectionState();
     };
 
+    const selectPickerItem = (item) => {
+        let fileUrl = item.url || (window.location.origin + '/storage/' + item.path);
+        fileUrl = fileUrl.replace(window.location.origin, '');
+        if (fileUrl.startsWith('/public/')) {
+            fileUrl = fileUrl.substring(8);
+        } else if (fileUrl.startsWith('/')) {
+            fileUrl = fileUrl.substring(1);
+        }
+
+        if (window.opener && !window.opener.closed) {
+            if (typeof window.opener.fmSetLink === 'function') {
+                window.opener.fmSetLink(fileUrl);
+            } else {
+                const event = new CustomEvent('teknikhub-file-manager:file-selected', {
+                    detail: { url: fileUrl },
+                });
+                window.opener.document.dispatchEvent(event);
+            }
+
+            window.close();
+            return;
+        }
+
+        document.dispatchEvent(new CustomEvent('teknikhub-file-manager:file-selected', {
+            detail: { url: fileUrl },
+        }));
+    };
+
+    el.pickerSelectButton?.addEventListener('click', () => {
+        const selectedItem = items.find(item => item.path === selectedPaths[0]);
+        if (!selectedItem) {
+            return;
+        }
+
+        selectPickerItem(selectedItem);
+    });
+
     const updateSelectionState = () => {
         el.selectionCount.innerText = selectedPaths.length;
-        if (selectedPaths.length > 0) {
+        if (selectedPaths.length > 0 && !pickerWindow) {
             el.selectionBar.classList.remove('d-none');
             el.selectionBar.classList.add('d-flex');
             
@@ -314,6 +356,33 @@
         } else {
             el.selectionBar.classList.add('d-none');
             el.selectionBar.classList.remove('d-flex');
+        }
+
+        if (el.pickerSelectedText && el.pickerSelectButton) {
+            const selectedItem = items.find(item => item.path === selectedPaths[0]);
+            el.pickerSelectButton.disabled = selectedPaths.length === 0;
+            el.pickerSelectedText.innerText = selectedItem
+                ? selectedItem.name
+                : 'No item selected';
+
+            if (el.pickerSelectedIcon) {
+                el.pickerSelectedIcon.innerHTML = '';
+
+                if (selectedItem) {
+                    if (selectedItem.thumbnail || selectedItem.icon === 'image') {
+                        const image = document.createElement('img');
+                        image.src = `${baseUrl}/preview?disk=${currentDisk}&path=${encodeURIComponent(selectedItem.thumbnail || selectedItem.path)}`;
+                        image.alt = '';
+                        el.pickerSelectedIcon.appendChild(image);
+                    } else {
+                        const icon = document.createElement('em');
+                        icon.className = selectedItem.type === 'directory'
+                            ? 'icon bi bi-folder-fill'
+                            : 'icon bi bi-file-earmark';
+                        el.pickerSelectedIcon.appendChild(icon);
+                    }
+                }
+            }
         }
     };
 
@@ -394,7 +463,7 @@
             const progressId = 'upload-' + Date.now() + '-' + index;
             
             const itemHtml = `
-                <div class="fm-upload-progress-item d-flex align-items-center position-relative border rounded p-2 mb-2" id="${progressId}">
+                <div class="fm-upload-progress-item d-flex align-items-center position-relative border p-2 mb-2" id="${progressId}">
                     <button type="button" class="btn-close position-absolute top-0 end-0 mt-2 me-2" style="font-size: 0.6rem; opacity: 0.6;" aria-label="Close" onclick="this.closest('.fm-upload-progress-item').remove(); if(document.querySelectorAll('.fm-upload-progress-item').length === 0) document.getElementById('fm-upload-list-container').style.display = 'none';"></button>
                     <div class="fm-item-icon text-primary me-3">
                         <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/></svg>
